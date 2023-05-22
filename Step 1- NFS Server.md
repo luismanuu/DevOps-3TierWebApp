@@ -87,3 +87,48 @@ Check https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html fo
 
 27.Verify your setup by running df -h, output must look like this
 ![Screenshot 2023-05-21 213629](https://github.com/luismanuu/DevOps-3TierWebApp/assets/14170090/75db4317-3221-4470-9f4b-b60faae21a22)
+
+## Step 2- Install and Configure NFS Server
+1. Update the system and install nfs-utils:
+   - `sudo yum -y update`
+   - `sudo yum install nfs-utils -y`
+
+2. Start the NFS server, enable it to start on reboot, and check its status:
+   - `sudo systemctl start nfs-server.service`
+   - `sudo systemctl enable nfs-server.service`
+   - `sudo systemctl status nfs-server.service`
+
+3. Export the mounts for web servers' subnet CIDR to allow client access:
+   - Set appropriate permissions for web servers to read, write, and execute files on NFS:
+     - `sudo chown -R nobody: /mnt/apps`
+     - `sudo chown -R nobody: /mnt/logs`
+     - `sudo chown -R nobody: /mnt/opt`
+     - `sudo chmod -R 777 /mnt/apps`
+     - `sudo chmod -R 777 /mnt/logs`
+     - `sudo chmod -R 777 /mnt/opt`
+   - Restart the NFS server:
+     - `sudo systemctl restart nfs-server.service`
+
+	
+	
+   - Configure access to NFS for clients within the same subnet:
+     Check subnet 
+     ![image](https://github.com/luismanuu/DevOps-3TierWebApp/assets/14170090/c5acbd09-427d-48e0-88bb-a28b55d4c8c3)
+     - Open the /etc/exports file for editing:
+       - `sudo vi /etc/exports`
+     - Add the following lines, replacing <Subnet-CIDR> with the appropriate CIDR:
+       ```
+       /mnt/apps <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
+       /mnt/logs <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
+       /mnt/opt <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
+       ```
+     - Save and exit the editor (Esc + :wq!)
+   - Update the exports configuration:
+     - `sudo exportfs -arv`
+
+4. Check which port is used by NFS and open it in the Security Groups:
+   - Find the NFS port:
+     - `rpcinfo -p | grep nfs`
+   - Open the following ports in the Security Groups to allow NFS server accessibility from the client: TCP 111, UDP 111, UDP 2049
+	![image](https://github.com/luismanuu/DevOps-3TierWebApp/assets/14170090/954895e6-176a-4c19-8769-543d956d25c6)
+
