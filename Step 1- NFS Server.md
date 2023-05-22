@@ -1,7 +1,7 @@
 # DevOps-3TierWebApp
 3 Tier Web Application DevOpsPBL
 
-#### Step 1 — Prepare NFS Server
+## Step 1 — Prepare NFS Server
 
 1. Launch an EC2 instance as the "Web Server" and create 3 volumes of 10 GiB each in the same AZ.
 Check https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html for more info.
