@@ -1,5 +1,5 @@
 # DevOps-3TierWebApp
-##DevOps PBL
+## DevOps PBL
 
 Implement a solution that consists of following components:
 
