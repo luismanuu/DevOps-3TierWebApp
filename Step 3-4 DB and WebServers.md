@@ -25,7 +25,7 @@
 
 # Step 4: Prepare Web Servers
 
-1. Launch 3 new EC2 instances with RHEL 9 Operating System.
+1. Launch 3 new EC2 instances with RHEL 9 Operating System. Important: Change NFS Security group, add the 3 private IP of webservers to connect to NFS ports
 
 2. Install NFS client and mount the NFS server's export for apps:
    ```shell
