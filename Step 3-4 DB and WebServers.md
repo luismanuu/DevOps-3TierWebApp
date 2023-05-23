@@ -45,6 +45,8 @@
    ```text
    <NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0
    ```
+   ![image](https://github.com/luismanuu/DevOps-3TierWebApp/assets/14170090/56c5347b-6adb-46bb-927c-7ea417b97b79)
+
 
 4. Install Remi's repository, Apache, and PHP:
    ```shell
@@ -64,8 +66,35 @@
 
 6. Adjust SELinux boolean value for httpd:
    ```shell
-   setsebool -P httpd_execmem 1
+   sudo setsebool -P httpd_execmem 1
    ```
 
 7. Repeat steps 1-6 for the remaining 2 Web Servers.
+
+
+8. Verify that Apache files and directories are accessible on the Web Server (/var/www) and NFS server (/mnt/apps). Test file creation and accessibility between Web Servers.
+
+9. Mount the Apache log folder to the NFS server's export for logs. Follow Step 4 to ensure persistence after reboot.
+
+10. Fork the tooling source code from Darey.io's GitHub Account to your own GitHub account.
+
+11. Deploy the tooling website's code to the Web Servers, ensuring the html folder is placed in /var/www/html.
+
+   Note 1: Open TCP port 80 on the Web Server.
+   
+   Note 2: If encountering a 403 Error, check /var/www/html folder permissions and disable SELinux with `sudo setenforce 0`. To make this change permanent, edit `/etc/sysconfig/selinux` and set `SELINUX=disabled`, then restart httpd.
+
+12. Update the website's configuration in `/var/www/html/functions.php` to connect to the database.
+
+13. Apply the `tooling-db.sql` script to the database using `mysql -h -u -p < tooling-db.sql`.
+
+14. Create a new admin user in MySQL with username: myuser and password: password:
+   ```sql
+   INSERT INTO 'users' ('id', 'username', 'password', 'email', 'user_type', 'status')
+   VALUES (1, 'myuser', '5f4dcc3b5aa765d61d8327deb882cf99', 'user@mail.com', 'admin', '1');
+   ```
+
+15. Open the website in your browser (`http://<your-web-server-ip>/index.php`) and verify successful login with the myuser account.
+```
+
 
