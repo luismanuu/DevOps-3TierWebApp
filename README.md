@@ -1,7 +1,7 @@
 # DevOps-3TierWebApp
-DevOps PBL
+##DevOps PBL
 
-implement a solution that consists of following components:
+Implement a solution that consists of following components:
 
 Infrastructure: AWS
 Webserver Linux: Red Hat Enterprise Linux 8
