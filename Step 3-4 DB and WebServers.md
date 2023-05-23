@@ -35,6 +35,8 @@
    ```
 
 3. Verify the successful mount and configure it to persist after reboot:
+![image](https://github.com/luismanuu/DevOps-3TierWebApp/assets/14170090/6b18cfe8-3a27-4775-8f71-0068dd62180a)
+
    ```shell
    df -h
    sudo vi /etc/fstab
