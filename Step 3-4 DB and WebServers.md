@@ -48,9 +48,10 @@
    ![image](https://github.com/luismanuu/DevOps-3TierWebApp/assets/14170090/56c5347b-6adb-46bb-927c-7ea417b97b79)
 
 
-4. Install Remi's repository, Apache, and PHP:
+4. Install Remi's repository, Apache, Git and PHP:
    ```shell
    sudo yum install httpd -y
+   sudo yum install git
    sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
    sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
    sudo dnf module reset php
@@ -58,10 +59,12 @@
    sudo dnf install php php-opcache php-gd php-curl php-mysqlnd
    ```
 
-5. Start and enable PHP-FPM:
+5. Start and enable PHP-FPM, Apache:
    ```shell
    sudo systemctl start php-fpm
    sudo systemctl enable php-fpm
+   sudo systemctl start httpd
+   sudo systemctl enable httpd
    ```
 
 6. Adjust SELinux boolean value for httpd:
@@ -74,25 +77,48 @@
 
 8. Verify that Apache files and directories are available on the Web Server in /var/www and also on the NFS server in /mnt/apps. If you see the same files – it means NFS is mounted correctly. You can try to create a new file touch test.txt from one server and check if the same file is accessible from other Web Servers.
 
-9. Mount the Apache log folder to the NFS server's export for logs. Follow Step 4 to ensure persistence after reboot.
-
+9. Locate the log folder for Apache on the Web Server and mount it to NFS server’s export for logs. Repeat step 3 to make sure the mount point will persist after reboot.
+ ```shell
+ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd
+ ```
 10. Fork the tooling source code from Darey.io's GitHub Account to your own GitHub account.
 
 11. Deploy the tooling website's code to the Web Servers, ensuring the html folder is placed in /var/www/html.
-
-   Note 1: Open TCP port 80 on the Web Server.
+ ```shell
+ cd /var/www
+ git clone https://github.com/luismanuu/tooling.git
+ ```
+   Note 1: Open TCP port 80 on the Web Servers.
    
    Note 2: If encountering a 403 Error, check /var/www/html folder permissions and disable SELinux with `sudo setenforce 0`. To make this change permanent, edit `/etc/sysconfig/selinux` and set `SELINUX=disabled`, then restart httpd.
 
-12. Update the website's configuration in `/var/www/html/functions.php` to connect to the database.
+12. Update the website's configuration in `/var/www/html/functions.php` to connect to the database. 
+Change this line: 
+```shell
+$db = mysqli_connect('<DB servers IP>', 'webaccess', '<password>', 'tooling');
+```
 
-13. Apply the `tooling-db.sql` script to the database using `mysql -h -u -p < tooling-db.sql`.
+13. Apply the `tooling-db.sql` script in the database server
+```shell 
+sudo mysql ```
+```sql USE tooling;
+```
+Apply script...
+
 
 14. Create a new admin user in MySQL with username: myuser and password: password:
    ```sql
-   INSERT INTO 'users' ('id', 'username', 'password', 'email', 'user_type', 'status')
-   VALUES (1, 'myuser', '5f4dcc3b5aa765d61d8327deb882cf99', 'user@mail.com', 'admin', '1');
+   INSERT INTO users (id, username, password, email, user_type, status) VALUES (2, 'myuser', '5f4dcc3b5aa765d61d8327deb882cf99', 'user@mail.com', 'admin', '1');
    ```
+   
+15. Change Apache config in webservers to point to tooling repo
+```shell 
+vi /etc/httpd/conf/httpd.conf 
+```
+Update Document Root and Directory to `/var/www/tooling/html`
+```shell 
+sudo systemctl restart httpd
+```
 
 15. Open the website in your browser (`http://<your-web-server-ip>/index.php`) and verify successful login with the myuser account.
 ```
