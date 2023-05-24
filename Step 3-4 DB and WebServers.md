@@ -72,7 +72,7 @@
 7. Repeat steps 1-6 for the remaining 2 Web Servers.
 
 
-8. Verify that Apache files and directories are accessible on the Web Server (/var/www) and NFS server (/mnt/apps). Test file creation and accessibility between Web Servers.
+8. Verify that Apache files and directories are available on the Web Server in /var/www and also on the NFS server in /mnt/apps. If you see the same files – it means NFS is mounted correctly. You can try to create a new file touch test.txt from one server and check if the same file is accessible from other Web Servers.
 
 9. Mount the Apache log folder to the NFS server's export for logs. Follow Step 4 to ensure persistence after reboot.
 
