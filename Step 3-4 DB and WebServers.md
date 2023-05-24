@@ -130,7 +130,7 @@ sudo systemctl restart httpd
 ```
 
 15. Open the website in your browser (`http://<your-web-server-ip>/index.php`) and verify successful login with the myuser account.
-```
+
 ![image](https://github.com/luismanuu/DevOps-3TierWebApp/assets/14170090/a7246b9d-c7e0-408c-a4b5-04fb5b3c7e61)
 ![image](https://github.com/luismanuu/DevOps-3TierWebApp/assets/14170090/204223d4-a25b-4627-974e-19963651c3ba)
 
