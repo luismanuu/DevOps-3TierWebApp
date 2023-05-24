@@ -6,6 +6,12 @@
    ```shell
    sudo apt install mysql-server
    ```
+Change config to accept remote connections:
+   ```shell
+   sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
+   ```
+   Change bind_address to 0.0.0.0
+   ![image](https://github.com/luismanuu/DevOps-3TierWebApp/assets/14170090/89905e69-610e-4d4b-95c4-b7e20d58eb99)
 
 3. Create the "tooling" database:
     ```shell
@@ -22,6 +28,7 @@
    FLUSH PRIVILEGES;
    ```
    Replace 'your_subnet_cidr' with the actual CIDR value of your webserver's subnet, and 'your_password' with a secure password for the "webaccess" user.
+   Note: Verify that port 3306 is open in AWS security groups to webservers.
 
 # Step 4: Prepare Web Servers
 
@@ -81,12 +88,14 @@
  ```shell
  sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd
  ```
+ If after mounting you have permission issues on httpd use ``
 10. Fork the tooling source code from Darey.io's GitHub Account to your own GitHub account.
 
 11. Deploy the tooling website's code to the Web Servers, ensuring the html folder is placed in /var/www/html.
  ```shell
  cd /var/www
  git clone https://github.com/luismanuu/tooling.git
+ sudo chown -R apache:apache /var/www/tooling
  ```
    Note 1: Open TCP port 80 on the Web Servers.
    
@@ -115,12 +124,16 @@ Apply script...
 ```shell 
 vi /etc/httpd/conf/httpd.conf 
 ```
-Update Document Root and Directory to `/var/www/tooling/html`
+Update Document Root and Directory to `/var/www/tooling/html` then restart
 ```shell 
 sudo systemctl restart httpd
 ```
 
 15. Open the website in your browser (`http://<your-web-server-ip>/index.php`) and verify successful login with the myuser account.
 ```
+![image](https://github.com/luismanuu/DevOps-3TierWebApp/assets/14170090/a7246b9d-c7e0-408c-a4b5-04fb5b3c7e61)
+![image](https://github.com/luismanuu/DevOps-3TierWebApp/assets/14170090/204223d4-a25b-4627-974e-19963651c3ba)
+
+
 
 
